@@ -4,7 +4,7 @@ const BORED = 1 * 30;
 const SICK = 1 * 40;
 const CLEANCHECK = 1 * 50;
 let count = 0;
-const HANGRY = 100 * 1000;
+const HANGRY = 50 * 1000;
 const mainDisplay = document.querySelector('.display');
 const defaultStats = {
     stats: {
@@ -36,11 +36,11 @@ const PET = {
     },
 
     isDeath() {
-        return this.stats.hungry <= 0 || this.stats.happy <= 0;
+        return this.stats.hungry <= 0 || this.stats.happy <= 0 || this.stats.sickness == 5;
     },
     mealFed() {
-        if (this.stats.hungry == 4) {
-            this.sickness++;
+        if (this.stats.hungry >= 4) {
+            this.stats.sickness++;
             this.actionQueue.push({
                 time: moment().add(SICK, 's').format('X'),
                 action: 'beSick'
@@ -66,6 +66,9 @@ const PET = {
             })
             this.sortActionQueue();
             setLocalPet();
+        } else {
+            // pet doesnt want to play
+            // add denying animation to main view
         }
     },
     beHungry() {
@@ -118,9 +121,9 @@ const PET = {
 
 // GETTER
 function getLocalPet() {
-    console.log(count, PET.stats, PET.actionQueue)
+    console.log(count*5, PET.stats, PET.actionQueue)
     const PETstats = JSON.parse(localStorage.getItem('myPET')) || defaultStats;
-    PET.stats = PETstats.stats;
+    PET.stats = {...PETstats.stats};
     PET.actionQueue = [...PETstats.actionQueue];
     // console.log(PET);
 }
@@ -165,16 +168,25 @@ function actionCheck() {
     return;
 }
 
-function petDie(){
+function petDie() {
     const allInputs = document.querySelectorAll('button');
-    allInputs.forEach((input,i)=>{
-        input.setAttribute('disabled',true);
+    allInputs.forEach((input, i) => {
+        input.setAttribute('disabled', true);
     });
-    setTimeout(function(){
-        allInputs.forEach((input,i)=>{
+    mainDisplay.innerHTML = `
+            <h2>PET DIE VIEW</h2>
+            <button id="resetBtn">RESET</button>
+    `;
+
+    document.querySelector('#resetBtn').addEventListener('click', function () {
+        localStorage.clear();
+        init();
+        allInputs.forEach((input, i) => {
             input.removeAttribute('disabled');
         });
-    },2000)
+        displayStats();
+    });
+
 }
 
 
@@ -189,26 +201,27 @@ function init() {
             PET.instinct();
         }
     }, HANGRY);
+    // get and set localstorage every 5s
+    let every5Second = setInterval(() => {
+        count++;
+        getLocalPet()
+        if (!PET.isDeath()) {
+            // check actionQue and execute the action
+            actionCheck()
+        } else {
+            console.log('pet die');
+            clearInterval(every5Second);
+            petDie();
+        }
+    }, 5000);
+
     setLocalPet();
 }
 init()
 
 
 
-// get and set localstorage every 5s
-let every5Second = setInterval(() => {
-    count++;
 
-    getLocalPet()
-    if (!PET.isDeath()) {
-        // check actionQue and execute the action
-        actionCheck()
-    } else {
-        console.log('pet die');
-        clearInterval(every5Second);
-        petDie();
-    }
-}, 5000);
 
 /* VIEW */
 function displayStats() {
@@ -247,6 +260,12 @@ document.querySelector('#play').addEventListener('click', function () {
     setLocalPet();
     mainDisplay.innerHTML = `<h2>Play View</h2>
         <p> Play Animation</p>
+        <p> Random number [0-9] and display: RnNum1</p>
+        <p> prompt user to press lesser or greater button</>
+        <button><</button> <button>></button>
+        <p> then generate another random number from [0-9] and doesnt containt the prev random number: RnNum2</p>        
+        <p> user (RnNum1 - RnNum2) to compare with userInput</p>
+        <p> if user win 3 out of 5 times, +1 to happiness stat</p>
     `;
 })
 
@@ -281,7 +300,7 @@ document.querySelector('#stats').addEventListener('click', function () {
 
 // Discipline Button
 document.querySelector('#discipline').addEventListener('click', function () {
-    fetch('https://api.kanye.rest').then((res)=>res.json()).then((data)=>{
+    fetch('https://api.kanye.rest').then((res) => res.json()).then((data) => {
         console.log(data)
         mainDisplay.innerHTML = `<h2>Kanye's inpiration</h2>
         
