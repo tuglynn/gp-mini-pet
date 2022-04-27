@@ -1,104 +1,145 @@
-const POOP = 1*20;
+const POOP = 1 * 20;
 const HUNGRY = 15;
-const BORED = 1*30;
-const SICK = 1*40;
-const CLEANCHECK = 1*50;
+const BORED = 1 * 30;
+const SICK = 1 * 40;
+const CLEANCHECK = 1 * 50;
 let count = 0;
-const HANGRY=10*1000;
+const HANGRY = 100 * 1000;
 const mainDisplay = document.querySelector('.display');
-const PET = {
-    stats:{
+const defaultStats = {
+    stats: {
+        age: 0,
         weight: 2,
-        // decrease every 15 mins
         happy: 2,
-        // decrease every 20 mins
         hungry: 2,
-        sickness:0,
-        poop:0,
+        sickness: 0,
+        poop: 0,
+    },
+    actionQueue: []
+}
+const PET = {
+    stats: {
+        age: 0,
+        weight: 0,
+        happy: 0,
+        hungry: 0,
+        sickness: 0,
+        poop: 0,
     },
     // action tracker
     actionQueue: [],
 
-    instinct(){     
+    instinct() {
         this.beHungry();
         this.beBored();
-        setLocalPet();  
+        setLocalPet();
     },
-    
-    isDeath(){
-        return this.stats.hunger <= 0 || this.stats.happy <=0; 
+
+    isDeath() {
+        return this.stats.hungry <= 0 || this.stats.happy <= 0;
     },
-    mealFed(){
-        if(this.stats.hungry==4){
+    mealFed() {
+        if (this.stats.hungry == 4) {
             this.sickness++;
-            this.actionQueue.push({time:moment().add(SICK,'s').format('X'),action:'beSick'});
-        }else{
+            this.actionQueue.push({
+                time: moment().add(SICK, 's').format('X'),
+                action: 'beSick'
+            });
+        } else {
             this.stats.hungry++;
-            this.actionQueue.push({time:moment().add(POOP,'s').format('X'),action:'poop'});          
+            this.actionQueue.push({
+                time: moment().add(POOP, 's').format('X'),
+                action: 'poop'
+            });
         }
         this.sortActionQueue();
+        setLocalPet();
     },
-    playGame(){
-        if(this.stats.happy<4){
+    playGame() {
+        if (this.stats.happy < 4) {
             //call mini game function
             // miniGame()
             this.stats.happy++;
-            this.actionQueue.push({time:moment().add(BORED,'s').format('X'),action:'beBored'})
+            this.actionQueue.push({
+                time: moment().add(BORED, 's').format('X'),
+                action: 'beBored'
+            })
             this.sortActionQueue();
+            setLocalPet();
         }
     },
-    beHungry(){
+    beHungry() {
         // console.log('behungry call')
-        this.stats.hungry--; 
+        this.stats.hungry--;
     },
-    beBored(){
+    beBored() {
         this.stats.happy--;
     },
-    beSick(){
+    beSick() {
         console.log('besick call')
         // get more sick
         this.stats.sickness++;
         //alarm user: pet need medicine
     },
-    bePooping(){
+    bePooping() {
         console.log('poopping call')
         this.stats.hungry--;
         this.stats.poop++;
-        this.actionQueue.push({time:moment().add(CLEANCHECK,'s').format('X'),action:'cleanCheck'});
+        this.actionQueue.push({
+            time: moment().add(CLEANCHECK, 's').format('X'),
+            action: 'cleanCheck'
+        });
         this.sortActionQueue();
         //display poop on screen
     },
-    cleanCheck(){
+    cleanCheck() {
         console.log('cleancheck call')
-        if(this.stats.poop>0){this.stats.sickness++};
+        if (this.stats.poop > 0) {
+            this.stats.sickness++
+        };
     },
-    sortActionQueue(){
+    beCleaned() {
+        this.stats.poop = 0;
+        setLocalPet();
+    },
+    beVaccininated() {
+        if (this.stats.sickness > 0) {
+            this.stats.sickness--;
+        }
+        setLocalPet();
+    },
+    sortActionQueue() {
         // this.actionQueue.sort((a,b)=>timeCheck(a.time)-timeCheck(b.time))
-        if(this.actionQueue.length>=2){this.actionQueue.sort((a,b)=>a.time-b.time)};
+        if (this.actionQueue.length >= 2) {
+            this.actionQueue.sort((a, b) => a.time - b.time)
+        };
     }
 }
 
 // GETTER
-function getLocalPet(){
-    console.log(count,PET.stats, PET.actionQueue)
-    const PETstats = JSON.parse(localStorage.getItem('myPET'));
+function getLocalPet() {
+    console.log(count, PET.stats, PET.actionQueue)
+    const PETstats = JSON.parse(localStorage.getItem('myPET')) || defaultStats;
     PET.stats = PETstats.stats;
     PET.actionQueue = [...PETstats.actionQueue];
     // console.log(PET);
 }
 // SETTER
-function setLocalPet(){
-    const PETstats = {stats:PET.stats,actionQueue:PET.actionQueue};
-    localStorage.setItem('myPET',JSON.stringify(PET));
+function setLocalPet() {
+    const PETstats = {
+        stats: PET.stats,
+        actionQueue: PET.actionQueue
+    };
+    localStorage.setItem('myPET', JSON.stringify(PET));
 }
 
 
-function actionCheck(){
-    if(PET.actionQueue.length>0){
+function actionCheck() {
+    if (PET.actionQueue.length > 0) {
         //is the first event of action queue past time?
         // past?do stuff and shift:nothing
-        if(moment().diff(moment(PET.actionQueue[0].time, 'X'),'s')>0){
-            switch (PET.actionQueue[0].action){
+        if (moment().diff(moment(PET.actionQueue[0].time, 'X'), 's') > 0) {
+            switch (PET.actionQueue[0].action) {
                 case 'beHungry':
                     PET.beHungry();
                     break;
@@ -118,51 +159,144 @@ function actionCheck(){
                     break;
             }
             PET.actionQueue.shift();
-            setLocalPet()    
+            setLocalPet()
         };
-           
     }
-    
     return;
 }
 
+function petDie(){
+    const allInputs = document.querySelectorAll('button');
+    allInputs.forEach((input,i)=>{
+        input.setAttribute('disabled',true);
+    });
+    setTimeout(function(){
+        allInputs.forEach((input,i)=>{
+            input.removeAttribute('disabled');
+        });
+    },2000)
+}
 
-PET.mealFed()
-setLocalPet()
 
-// get and set localstorage every 5s
-let every5Second = setInterval(() => {
-    count++;
-    displayStats();
-    getLocalPet()
-    if(!PET.isDeath()){
-        // check actionQue and execute the action
-        actionCheck()  
-    }else{
-        console.log('pet die')
-        clearInterval(every5Second);
-    }  
-}, 3000);
-
-function init(){
+function init() {
+    getLocalPet();
     let animalInstinct = setInterval(() => {
         console.log('instinct call')
-        if(PET.isDeath()){clearInterval(animalInstinct)}
-        else{PET.instinct();}
-        
+        if (PET.isDeath()) {
+            clearInterval(animalInstinct);
+            petDie();
+        } else {
+            PET.instinct();
+        }
     }, HANGRY);
+    setLocalPet();
 }
 init()
 
 
 
-function displayStats(){
+// get and set localstorage every 5s
+let every5Second = setInterval(() => {
+    count++;
+
+    getLocalPet()
+    if (!PET.isDeath()) {
+        // check actionQue and execute the action
+        actionCheck()
+    } else {
+        console.log('pet die');
+        clearInterval(every5Second);
+        petDie();
+    }
+}, 5000);
+
+/* VIEW */
+function displayStats() {
     mainDisplay.innerHTML = `
-        <p>Weight: ${PET.stats.weight}</p>
+        <p>Age: ${PET.stats.age}</p>
         <p>Happy: ${PET.stats.happy}</p>
         <p>Hungry: ${PET.stats.hungry}</p>
+        <p>Sickness: ${PET.stats.sickness}</p>
+        <p>Poop: ${PET.stats.poop}</p>
     `;
 
 }
 
 
+
+/* INTERACTION */
+// FEED button
+document.querySelector('#feed').addEventListener('click', function () {
+    PET.mealFed();
+
+    mainDisplay.innerHTML = `<h2>Feed View</h2>
+        <p> Feed Animation</p>
+    `;
+})
+
+// Light Button
+document.querySelector('#light').addEventListener('click', function () {
+    mainDisplay.innerHTML = `<h2>Light View</h2>
+        <p> Light Animation</p>
+    `;
+})
+
+// Play Button
+document.querySelector('#play').addEventListener('click', function () {
+    PET.playGame();
+    setLocalPet();
+    mainDisplay.innerHTML = `<h2>Play View</h2>
+        <p> Play Animation</p>
+    `;
+})
+
+// Medicine Button
+document.querySelector('#medicine').addEventListener('click', function () {
+    PET.beVaccininated();
+    mainDisplay.innerHTML = `<h2>Medicine View</h2>
+        <p> Med Animation</p>
+    `;
+})
+
+
+// Clean Button
+document.querySelector('#clean').addEventListener('click', function () {
+    PET.beCleaned();
+    mainDisplay.innerHTML = `<h2>clean View</h2>
+        <p> clean Animation</p>
+    `;
+})
+
+// Stat Button
+document.querySelector('#stats').addEventListener('click', function () {
+    mainDisplay.innerHTML = `
+        <p>Age: ${PET.stats.age}</p>
+        <p>Weight: ${PET.stats.weight}</p>
+        <p>Happy: ${PET.stats.happy}</p>
+        <p>Hungry: ${PET.stats.hungry}</p>
+        <p>Sickness: ${PET.stats.sickness}</p>
+        <p>Poop: ${PET.stats.poop}</p>
+    `;
+})
+
+// Discipline Button
+document.querySelector('#discipline').addEventListener('click', function () {
+    fetch('https://api.kanye.rest').then((res)=>res.json()).then((data)=>{
+        console.log(data)
+        mainDisplay.innerHTML = `<h2>Kanye's inpiration</h2>
+        
+        <quoteblock>"${data.quote}"</quoteblock>
+        <p>Drop the Kanye animation here</p>
+    `;
+    });
+    PET.playGame();
+    setLocalPet();
+})
+
+
+// Play Button
+document.querySelector('#attention').addEventListener('click', function () {
+    mainDisplay.innerHTML = `<h2>Attention View</h2>
+        <p>Attention Animation</p>
+    `;
+})
