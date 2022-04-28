@@ -9,65 +9,81 @@
     type="text/css" />
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />
   <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./sprite/sprite.css">
+  <link rel="stylesheet" href="style.css">
   <title>Burauza no akachan</title>
-  <style>
-    body {
-      padding-bottom: 90px;
-    }
-
-    .nes-progress {
-      height: 25px;
-    }
-  </style>
 </head>
 
 <body>
   <nav style="padding: 20px; border-bottom: 3px solid #ccc; margin-bottom: 60px">
     <div class="container">
+      <div class="nes-container with-title is-centered">
+        <p class="title" style="color: red">Burauza no akachan</p>
+        <p>Looking for a little companion? Look no further, Burauza No Akachan is what you’re looking for. Customize, play, feed, and take care of your browser baby.</p>
+      </div>
+      
       <h2 style="margin-bottom: 0">
         <i class="snes-jp-logo"></i>
         ブラウザの赤ちゃん
       </h2>
     </div>
   </nav>
-  <div class="display"></div>
-  <div class="interaction">
-    <button id="feed">Feed</button>
-    <button id="light">Light</button>
-    <button id="play">Play</button>
-    <button id="medicine">Medicine</button>
-    <button id="clean">clean</button>
-    <button id="stats">Stats</button>
-    <button id="discipline">Kanspiration</button>
-    <button id="attention">Idle View</button>
-
-  </div>
-
-  <div class="container" style="margin-bottom: 50px">
+  <main class="gamedisp"> 
+  <div class="container name-input">
     <div class="row">
       <div class="col">
       </div>
+     
       <div class="col-sm-9 col-xs-12">
-        <div class="nes-balloon from-left">
-          <p style="color: #ff0000"><span>Burauza no akachan</span></p>
+        <div class="nes-balloon from-left speech-bubble">
           <div class="nes-field">
-            <label for="name_field">Your Browser Baby Name....</label>
-            <input type="text" id="name_field" class="nes-input">
+            <label for="name_field">Hi my name is...</label>
+            <input type="text" id="name_field" class="nes-input" placeholder="Enter name here...">
           </div>
         </div>
       </div>
     </div>
   </div>
+  
+  <div class="nes-container is-rounded sprite-box">
+    <div class="Character">
+   
+      <!-- <img class="Character_shadow pixelart" src="./sprite/img/.jpeg" alt="Shadow" /> -->
+      
+      <!-- <img class="Character_spritesheet pixelart face-up" src="./sprite/img/cat.jpeg" alt="Character" /> -->
+      <!-- <img class="Character_spritesheet pixelart face-down" src="./sprite/img/cat.jpeg" alt="Character" />
+      <img class="Character_spritesheet pixelart face-left" src="./sprite/img/cat.jpeg" alt="Character" />
+      <img class="Character_spritesheet pixelart face-right" src="./sprite/img/cat.jpeg" alt="Character" />
+      <img class="Character_spritesheet pixelart sit-down" src="./sprite/img/cat.jpeg" alt="Character" /> 
+      <img class="Character_spritesheet pixelart lick" src="./sprite/img/cat.jpeg" alt="Character" />
+      <img class="Character_spritesheet pixelart sleep" src="./sprite/img/cat.jpeg" alt="Character" /> -->
+      <img class="Character_spritesheet pixelart wake-up" src="./sprite/img/cat.jpeg" alt="Character" />
+    </div>  
+      
+  </div>
+  <div class="display"></div>
+  <div class="interaction">
+    <button class="nes-btn" id="feed">Feed</button>
+    <button class="nes-btn"id="light">Light</button>
+    <button class="nes-btn" id="play">Play</button>
+    <button class="nes-btn" id="medicine">Medicine</button>
+    <button class="nes-btn"id="clean">clean</button>
+    <button class="nes-btn"id="stats">Stats</button>
+    <button class="nes-btn" id="discipline">Kanspiration</button>
+    <button class="nes-btn" id="attention">Idle View</button>
 
+  </div>
+</main>
+  
   <!-- right      -->
   <div class="col-md-8 col-sm-12 col-xs-12">
-    <div class="nes-container with-title">
+    <div class="nes-container with-title stat-box">
       <h3 class="title">Akachan Status</h3>
       <div class="row">
         <a class="nes-btn" href="#">Hunger</a>
         <div class="col-sm-4 col-xs-12"></div>
         <div class="col-sm-8 col-xs-12">
-          <progress class="nes-progress is-success" value="65" max="100"></progress>
+          <progress class="nes-progress is-success stat-bar" value="65" max="100"></progress>
         </div>
       </div>
 
@@ -75,7 +91,7 @@
         <a class="nes-btn" href="#">Sleep</a>
         <div class="col-sm-4 col-xs-12"></div>
         <div class="col-sm-8 col-xs-12">
-          <progress class="nes-progress is-error" value="25" max="100"></progress>
+          <progress class="nes-progress is-error stat-bar" value="25" max="100"></progress>
         </div>
       </div>
 
@@ -85,10 +101,11 @@
         <a class="nes-btn" href="#">Poop</a>
         <div class="col-sm-4 col-xs-12"></div>
         <div class="col-sm-8 col-xs-12">
-          <progress class="nes-progress is-pattern" value="50" max="100"></progress>
+          <progress class="nes-progress is-pattern stat-bar" value="50" max="100"></progress>
         </div>
       </div>
     </div>
+ 
     <script src="./assets/js/utility/momen.js"></script>
     <!-- <script src="./assets/js/classes/PET.js"></script> -->
     <script src="./assets/js/script.js"></script>
