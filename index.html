@@ -15,39 +15,43 @@
 </head>
 
 <body>
-  <nav style="padding: 20px; border-bottom: 3px solid #ccc; margin-bottom: 60px">
+  <nav style="" class=" container">
     <!-- ! Game description -->
-
+    <div class="row d-flex justify-content-center">
+      <div class="col-10">
+        <div class="nes-container with-title is-centered is-rounded">
+          <h1 class="" style="color: red">Burauza no akachan</h1>
+          <p>Looking for a little companion? Look no further, Burauza No Akachan is what you’re looking for. Customize,
+            play, feed, and take care of your browser baby.</p>
+        </div>
+  
+        <h2 class='text-center' style="margin-bottom: 0">
+          <i class="snes-jp-logo"></i>
+          ブラウザの赤ちゃん
+        </h2>
+      </div>
+    </div>
+    
   </nav>
   <main class="gamedisp container-sm">
-    <div class="container-md">
-      <div class="nes-container with-title is-centered">
-        <p class="title" style="color: red">Burauza no akachan</p>
-        <p>Looking for a little companion? Look no further, Burauza No Akachan is what you’re looking for. Customize,
-          play, feed, and take care of your browser baby.</p>
-      </div>
+    
+    <div class="row container d-flex justify-content-center p-0 mt-5">
+      <div class="col-12 text-center" id="petName"></div>
+      <div id='displayContainer' class="nes-container is-rounded sprite-box col-12 col-md-10">
 
-      <h2 style="margin-bottom: 0">
-        <i class="snes-jp-logo"></i>
-        ブラウザの赤ちゃん
-      </h2>
-    </div>
-    <div class="row">
-      <div class="col-12" id="petName"></div>
-      <div class=" nes-container is-rounded sprite-box col-8">
+        <div class="startGame"></div>
+
         <div class="display">
-          <div class="Character moving">
-            <img id='petAnimation' class="Character_spritesheet pixelart face-right" src="./sprite/img/cat.jpeg" alt="Character" />
-          </div>
-        </div>
-        <div class="poop"></div>
-      </div>
 
-      <div class="col-1">
+        </div>
+        <div class="poop" style="position:absolute;bottom:0;"></div>
+      </div>
+      
+      <div class=" col-12 col-md-2 text-center p-2 interaction">
         <button class="nes-btn m-2 uiBtn" id="attention"><i class="fa-2x fa-solid fa-house"></i></button>
         <button class="nes-btn m-2 uiBtn" id="feed"><i class="fa-2x fa-solid fa-drumstick-bite"></i></button>
         <button class="nes-btn m-2 uiBtn" id="light"><i class="fa-2x fa-regular fa-lightbulb"></i></button>
-        <button class="nes-btn m-2 uiBtn" id="play"><i class="fa-2x fa-solid fa-baseball-bat-ball"></i></button>
+        <button class="nes-btn m-2 uiBtn" id="play"><i class="fa-2x snes-logo"></i></button>
         <button class="nes-btn m-2 uiBtn" id="medicine"><i class="fa-2x fa-solid fa-briefcase-medical"></i></button>
         <button class="nes-btn m-2 uiBtn" id="clean"><i class="fa-2x fa-solid fa-broom-ball"></i></button>
         <button class="nes-btn m-2 uiBtn" id="stats"><i class="fa-2x fa-solid fa-weight-scale"></i></button>

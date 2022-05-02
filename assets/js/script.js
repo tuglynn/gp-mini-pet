@@ -1,4 +1,4 @@
-console.log('hi');
+
 const POOP = 1 * 20;
 const HUNGRY = 15;
 const BORED = 1 * 30;
@@ -8,26 +8,30 @@ let count = 0;
 const HANGRY = 50 * 1000;
 const mainDisplay = document.querySelector('.display');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
-
+const displayContainer = document.querySelector('#displayContainer');
 const defaultStats = {
     stats: {
+        name:'',
         age: 0,
         weight: 2,
         happy: 2,
         hungry: 2,
         sickness: 0,
         poop: 0,
+        sleep:false
     },
     actionQueue: []
 }
 const PET = {
     stats: {
+        name:'',
         age: 0,
         weight: 0,
-        happy: 0,
-        hungry: 0,
+        happy: 4,
+        hungry: 4,
         sickness: 0,
         poop: 0,
+        sleep:false
     },
     // action tracker
     actionQueue: [],
@@ -39,7 +43,7 @@ const PET = {
     },
 
     isDeath() {
-        return this.stats.hungry <= 0 || this.stats.happy <= 0 || this.stats.sickness == 5;
+        return this.stats.hungry <= 0 || this.stats.happy <= 0 || this.stats.sickness >= 5;
     },
     mealFed() {
         if (this.stats.hungry >= 4) {
@@ -105,7 +109,7 @@ const PET = {
         };
     },
     beCleaned() {
-        this.stats.poop = 0;
+        this.stats.poop--;
         setLocalPet();
     },
     beVaccininated() {
@@ -172,28 +176,42 @@ function actionCheck() {
 }
 
 function petDie() {
-    const allInputs = document.querySelectorAll('button');
+    const allInputs = document.querySelectorAll('.interaction button');
     allInputs.forEach((input, i) => {
         input.setAttribute('disabled', true);
     });
     mainDisplay.innerHTML = `
             <h2>PET DIE VIEW</h2>
-            <button id="resetBtn">RESET</button>
+            <button class='nes-btn' id="resetBtn">RESET</button>
     `;
 
     document.querySelector('#resetBtn').addEventListener('click', function () {
         localStorage.clear();
         init();
+        
         allInputs.forEach((input, i) => {
             input.removeAttribute('disabled');
         });
-        displayStats();
+        mainDisplay.innerHTML ='';
     });
 
 }
-
+function displayTracker(){
+    if(PET.stats.poop>0){
+        let htmlTemplate=''
+        for(let i =0; i< PET.stats.poop;i++){
+            htmlTemplate += '<i class="fa-3x fa-solid fa-poo brown m-2"></i>'
+        }
+        document.querySelector('.poop').innerHTML = htmlTemplate;
+    }else{
+        document.querySelector('.poop').innerHTML = '';
+    }
+}
 function gameStart(){
+    document.querySelector('.startGame').innerHTML = ''; 
     getLocalPet();
+    document.querySelector('#petName').innerHTML = `<h2>${PET.stats.name} akachan</h2>`;
+    idleDisplay();
     let animalInstinct = setInterval(() => {
         console.log('instinct call')
         if (PET.isDeath()) {
@@ -204,39 +222,94 @@ function gameStart(){
         }
     }, HANGRY);
     // get and set localstorage every 5s
-    let every5Second = setInterval(() => {
+    let everySecond = setInterval(() => {
         count++;
-        getLocalPet()
+        getLocalPet();
+        displayTracker()
         if (!PET.isDeath()) {
             // check actionQue and execute the action
             actionCheck()
         } else {
             console.log('pet die');
-            clearInterval(every5Second);
+            clearInterval(everySecond);
             petDie();
         }
-    }, 5000);
+    }, 1000);
 
     setLocalPet();
+   
 }
 
 function init() {
-    petAnimation();
+    // what is your pet name
+    if(!!!localStorage.getItem('myPET')){
+        askPetName();
+    }else
+    {gameStart()};
+    if(!!PET.stats.sleep){
+        displayContainer.classList.toggle('is-dark');
+    }
 }
-init()
+init();
 
+function askPetName(){
+    let htmlTemplate =`
+    <div class=''>
+    <section class='message-list'>
+        <section class='message row askName'>
+            <i class='nes-bcrikko col-3 mt-5 is-dark'></i>
+            <div class='nes-balloon from-left col-9'>
+                <p>What is your pet name?</p>
+            </div>
+        </section>
+        
+        <section class='message row mt-5'>
+            <div class='nes-balloon from-right col-12'>
+                <form id='getName' class='nes-field is-centered'>
+                    <label for='petName'>I will call it</label>
+                    <input type='text' id='myPetName' class='nes-input'/>
+                    <button type='submit' class='nes-btn is-primary mt-2'>Submit</button>
+                </form>
+            </div>
+        </section>
+    </section>
+    </div>
 
-
-/* VIEW */
-function displayStats() {
-    mainDisplay.innerHTML = `
-        <p>Age: ${PET.stats.age}</p>
-        <p>Happy: ${PET.stats.happy}</p>
-        <p>Hungry: ${PET.stats.hungry}</p>
-        <p>Sickness: ${PET.stats.sickness}</p>
-        <p>Poop: ${PET.stats.poop}</p>
     `;
 
+    document.querySelector('.startGame').innerHTML = htmlTemplate;
+
+    document.querySelector('#getName').addEventListener('submit',function(e){
+        e.preventDefault();
+        const petName = document.querySelector('#myPetName');
+        
+        PET.stats.name=petName.value;
+        htmlTemplate = `
+        <section class='message-list'>
+            <section class='message row askName'>
+                <i class='nes-bcrikko col-3 mt-5 is-dark'></i>
+                <div class='nes-balloon from-left col-9'>
+                    <p class='niceName'><span class='nes-text is-primary'>${PET.stats.name}</span> is a very nice name!</p>
+                    <p> Want to start the game?</p>
+                </div>
+            </section>
+            <section class='message row mt-5'>
+                <div class='nes-balloon from-right col-12'>
+                    <form id='getName' class='nes-field is-centered'>
+                        <button type='submit' class='nes-btn is-primary mt-2' onclick='gameStart' >Yeah! Let's do it!</button>
+                    </form>
+                </div>
+            </section>
+        </section
+        `;
+        document.querySelector('.startGame').innerHTML = htmlTemplate;
+        PET.stats.hungry = 4;
+        PET.stats.happy = 4;
+        PET.stats.sickness=0;
+        PET.stats.sleep=false;
+        PET.stats.poop = 0;   
+        setLocalPet();    
+    })
 }
 
 
@@ -248,8 +321,14 @@ document.querySelector('#feed').addEventListener('click', function () {
     PET.mealFed();
 
     mainDisplay.innerHTML = `
-    <div class="Character">
-        <img id='petAnimation' class="Character_spritesheet pixelart lick" src="./sprite/img/cat.jpeg" alt="Character" />
+    <div >
+        <h2 class='text-center'>Give your pet some foods</h2>
+        <div class="Character" style='top:150px;left:150px;'>
+            <img id='petAnimation' class="Character_spritesheet pixelart lick" src="./sprite/img/cat.jpeg" alt="Character" />
+        </div>
+        <div style='position:absolute; top:330px;left:200px;'>
+            <i class=" fa-solid fa-bowl-food brown fa-3x"></i>
+        </div>
     </div>
     `;
 })
@@ -257,12 +336,27 @@ document.querySelector('#feed').addEventListener('click', function () {
 // Light Button
 document.querySelector('#light').addEventListener('click', function () {
     
-    clickSound.play();
-    mainDisplay.innerHTML = `<h2>Light View</h2>
-        <p> Light Animation</p>
+    clickSound.play();  
+    mainDisplay.innerHTML = `
+        <div class=''>
+            <h2>Light View</h2>
+            <p> Toggle Light Switch to toggle pet Sleeping mode</p>        
+            <button onClick='lightToggle()' class='nes-btn'>${PET.stats.sleep?'On':'Off'}</button>    
+        </div>
     `;
 })
-
+function lightToggle(){
+    PET.stats.sleep = !PET.stats.sleep;
+    displayContainer.classList.toggle('is-dark');
+    mainDisplay.innerHTML = `
+        <div class=''>
+            <h2>Light View</h2>
+            <p> Toggle Light Switch to toggle pet Sleeping mode</p>      
+            <button onClick='lightToggle()' class='nes-btn'>${PET.stats.sleep?'On':'Off'}</button>    
+        </div>
+    `;
+    
+}
 // Play Button
 document.querySelector('#play').addEventListener('click', function () {
     
@@ -285,8 +379,11 @@ document.querySelector('#medicine').addEventListener('click', function () {
     clickSound.play();
    
     PET.beVaccininated();
-    mainDisplay.innerHTML = `<h2>Medicine View</h2>
-        <p> Med Animation</p>
+    mainDisplay.innerHTML = `
+        <div class='text-center'>
+        <h2>Gave you pet some drugs</h2>
+        <img src='./assets/imgs/medicine.gif' alt='pet takes medicine'/>
+        </div>
     `;
 })
 
@@ -294,10 +391,13 @@ document.querySelector('#medicine').addEventListener('click', function () {
 // Clean Button
 document.querySelector('#clean').addEventListener('click', function () {
     clickSound.play();
-   
     PET.beCleaned();
-    mainDisplay.innerHTML = `<h2>clean View</h2>
-        <p> clean Animation</p>
+    displayTracker();
+    mainDisplay.innerHTML = `
+        <div class='text-center'>
+            <h2>Groom your pet</h2>
+            <img src='./assets/imgs/clean-vacuum.gif' alt='clean up' style='width:100%;height:auto;'/>
+        </div>
     `;
 })
 
@@ -307,25 +407,29 @@ document.querySelector('#stats').addEventListener('click', function () {
     
     let htmlTemplate = `<div class="container">
     <div class="row">
-      <div class="col-md-10 nes-container is-dark with-title">
+      <div class="col-md-10 nes-container with-title is-rounded">
         <p class="title">STATS</p>
         <section class="icon-list">`
     htmlTemplate +=`<p>Hungry</p>`;
     for(let i=1; i<5;i++){
         if(i<=PET.stats.hungry){
-            htmlTemplate+= `<i class="nes-icon is-medium heart"></i>`
+            htmlTemplate+= `<i class="nes-icon is-medium star"></i>`
         }else{
-            htmlTemplate += `<i class="nes-icon is-medium heart is-empty"></i>`
+            htmlTemplate += `<i class="nes-icon is-medium star is-empty"></i>`
         }
     }
     htmlTemplate += `<p>Happy</p>`;
     for(let i=1;i<5;i++){
         if(i<=PET.stats.happy){
-            htmlTemplate+= `<i class="nes-icon is-medium star"></i>`
+            htmlTemplate+= `<i class="nes-icon is-medium like"></i>`
         }else{
-            htmlTemplate+=`<i class="nes-icon is-medium star is-empty"></i>`
+            htmlTemplate+=`<i class="nes-icon is-medium like is-empty"></i>`
         }
 
+    }
+    htmlTemplate += `<p>Health</p>`;
+    for(let i=4;i>0;i--){
+        htmlTemplate +=`<i class='nes-icon is-medium ${i>PET.stats.sickness?'heart':'heart is-empty'}'></i>`
     }
 
     htmlTemplate += `      
@@ -342,10 +446,23 @@ document.querySelector('#discipline').addEventListener('click', function () {
     
     fetch('https://api.kanye.rest').then((res) => res.json()).then((data) => {
         console.log(data)
-        mainDisplay.innerHTML = `<h2>Kanye's inpiration</h2>
+        mainDisplay.innerHTML = `
+        <div>
+            <h2 class='text-center mb-5'>Kanye's inpiration</h2>
+        <section class='message-list'>
+            <section class='message row'>
+                <div class='col-3 align-self-end nes-container is-rounded p-0'> 
+                    <img src='https://64.media.tumblr.com/070d70ca75a9f9b1a3dc9a33ee22056b/tumblr_p7s4gfz4rw1tssg0jo1_1280.gifv' alt='kanye' class='w-100'>
+                </div>
+                <div class='nes-balloon from-left col-8 is-dark'>
+                    <quoteblock>"${data.quote}"</quoteblock>
+                </div>
+                
+            </section>
+        </section>
         
-        <quoteblock>"${data.quote}"</quoteblock>
-        <p>Drop the Kanye animation here</p>
+        </div>
+        
     `;
     });
     PET.playGame();
@@ -357,20 +474,25 @@ document.querySelector('#discipline').addEventListener('click', function () {
 document.querySelector('#attention').addEventListener('click', function () {
    
     clickSound.play();
+    idleDisplay();
+    
+    
+})
+
+function idleDisplay(){
     mainDisplay.innerHTML = `
     <div class="Character moving">
         <img id='petAnimation' class="Character_spritesheet pixelart face-right" src="./sprite/img/cat.jpeg" alt="Character" />
     </div>
     `;
     petAnimation();
-    
-})
+}
 
 function petAnimation(){
     const walkContainer = document.querySelector('#petAnimation');
     let petMoving = setInterval(() => {
         
-        if(document.querySelector('.Character').classList.contains('moving')){
+        if(!!document.querySelector('.Character') && document.querySelector('.Character').classList.contains('moving')){
             if(walkContainer.classList.contains('face-right')){
                 walkContainer.classList.toggle('face-right');
                 walkContainer.classList.toggle('face-down');

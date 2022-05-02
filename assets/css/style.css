@@ -33,6 +33,8 @@ body {
   .sprite-box {
     width: 500px;
     height: 500px;
+    margin:5px auto;
+   
   }
   
 .moving {
@@ -65,4 +67,8 @@ body {
 
 .uiBtn{
   min-width: 100px;
+}
+
+.brown{
+  color:#8c5e3c
 }
