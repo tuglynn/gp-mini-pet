@@ -1,13 +1,23 @@
-
-const POOP = 1 * 20;
+// hungry timer after eating
 const HUNGRY = 15;
+// poop timer after eating
+const POOP = 1 * 20;
+// happy timer after play
 const BORED = 1 * 30;
+// sick timer after eating too much
 const SICK = 1 * 40;
+// sick timer if cage is not clean
 const CLEANCHECK = 1 * 50;
+// second tracker -> use it for age calculation in the future
 let count = 0;
-const HANGRY = 50 * 1000;
+// Animal instinct timer - animal will go bored and hungry 
+const HANGRY = 50;
+// main render div
 const mainDisplay = document.querySelector('.display');
+const gameMusic = new Audio('/assets/sound/game.mp3');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
+const gameOver = new Audio('./assets/sound/gameOver.wav');
+// main view of all the stats and animation
 const displayContainer = document.querySelector('#displayContainer');
 const defaultStats = {
     stats: {
@@ -128,7 +138,7 @@ const PET = {
 
 // GETTER
 function getLocalPet() {
-    console.log(count*5, PET.stats, PET.actionQueue)
+    console.log(count, PET.stats, PET.actionQueue)
     const PETstats = JSON.parse(localStorage.getItem('myPET')) || defaultStats;
     PET.stats = {...PETstats.stats};
     PET.actionQueue = [...PETstats.actionQueue];
@@ -143,7 +153,7 @@ function setLocalPet() {
     localStorage.setItem('myPET', JSON.stringify(PET));
 }
 
-
+// dequeue function
 function actionCheck() {
     if (PET.actionQueue.length > 0) {
         //is the first event of action queue past time?
@@ -174,14 +184,18 @@ function actionCheck() {
     }
     return;
 }
-
+// if pet dies, reset the game
 function petDie() {
-    const allInputs = document.querySelectorAll('.interaction button');
+    gameOver.play();
+    const allInputs = document.querySelectorAll('.uiBtn');
+    console.log(allInputs);
     allInputs.forEach((input, i) => {
-        input.setAttribute('disabled', true);
+        input.setAttribute('disabled',true);
     });
+    document.querySelector('.poop').innerHTML ='';
     mainDisplay.innerHTML = `
-            <h2>PET DIE VIEW</h2>
+            <h2>R.I.P.</h2>
+            <img class='w-80' src='./assets/imgs/Death.gif' alt='RIP'/>
             <button class='nes-btn' id="resetBtn">RESET</button>
     `;
 
@@ -208,6 +222,12 @@ function displayTracker(){
     }
 }
 function gameStart(){
+    
+    
+    // let playGameMusic = setInterval(() => {
+    //     gameMusic.play();
+    // }, 62000);
+    
     document.querySelector('.startGame').innerHTML = ''; 
     getLocalPet();
     document.querySelector('#petName').innerHTML = `<h2>${PET.stats.name} akachan</h2>`;
@@ -220,7 +240,7 @@ function gameStart(){
         } else {
             PET.instinct();
         }
-    }, HANGRY);
+    }, HANGRY*1000);
     // get and set localstorage every 5s
     let everySecond = setInterval(() => {
         count++;
@@ -241,6 +261,9 @@ function gameStart(){
 }
 
 function init() {
+    gameMusic.volume = 0.2;
+    gameMusic.play();
+    gameMusic.loop = true;
     // what is your pet name
     if(!!!localStorage.getItem('myPET')){
         askPetName();
