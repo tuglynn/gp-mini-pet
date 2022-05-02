@@ -17,15 +17,7 @@ body {
     justify-content: center;
     width: 100%;
   }
-  .interaction {
-    display: flex;
-    justify-content: space-between;
-    width: 98%;
-    margin-top: 40px;
-    margin-bottom: 70px;
-    margin-left: 30px;
-    margin-right: 30px;
-  }
+
   .stat-box {
     display: flex;
     justify-content: center;
@@ -39,7 +31,38 @@ body {
     width: 270px;
   }
   .sprite-box {
-    width: 300px;
-    height: 300px;
+    width: 500px;
+    height: 500px;
   }
   
+.moving {
+
+  animation: move 24s linear infinite;
+
+}
+
+@keyframes move {
+  0%{left:0px;
+    top:0px;
+    }
+  25%{left:300px;
+    top:0px;
+    }
+  50%{
+    left:300px;
+    top: 300px;
+  }
+  75%{
+    left:0px;
+    top:300px;
+  }
+  100%{
+    left:0px;
+    top:0px;
+  }
+  
+}
+
+.uiBtn{
+  min-width: 100px;
+}

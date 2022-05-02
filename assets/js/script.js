@@ -8,6 +8,7 @@ let count = 0;
 const HANGRY = 50 * 1000;
 const mainDisplay = document.querySelector('.display');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
+
 const defaultStats = {
     stats: {
         age: 0,
@@ -191,8 +192,7 @@ function petDie() {
 
 }
 
-
-function init() {
+function gameStart(){
     getLocalPet();
     let animalInstinct = setInterval(() => {
         console.log('instinct call')
@@ -219,6 +219,10 @@ function init() {
 
     setLocalPet();
 }
+
+function init() {
+    petAnimation();
+}
 init()
 
 
@@ -239,16 +243,20 @@ function displayStats() {
 /* INTERACTION */
 // FEED button
 document.querySelector('#feed').addEventListener('click', function () {
+   
     clickSound.play();
     PET.mealFed();
 
-    mainDisplay.innerHTML = `<h2>Feed View</h2>
-        <p> Feed Animation</p>
+    mainDisplay.innerHTML = `
+    <div class="Character">
+        <img id='petAnimation' class="Character_spritesheet pixelart lick" src="./sprite/img/cat.jpeg" alt="Character" />
+    </div>
     `;
 })
 
 // Light Button
 document.querySelector('#light').addEventListener('click', function () {
+    
     clickSound.play();
     mainDisplay.innerHTML = `<h2>Light View</h2>
         <p> Light Animation</p>
@@ -275,6 +283,7 @@ document.querySelector('#play').addEventListener('click', function () {
 // Medicine Button
 document.querySelector('#medicine').addEventListener('click', function () {
     clickSound.play();
+   
     PET.beVaccininated();
     mainDisplay.innerHTML = `<h2>Medicine View</h2>
         <p> Med Animation</p>
@@ -285,6 +294,7 @@ document.querySelector('#medicine').addEventListener('click', function () {
 // Clean Button
 document.querySelector('#clean').addEventListener('click', function () {
     clickSound.play();
+   
     PET.beCleaned();
     mainDisplay.innerHTML = `<h2>clean View</h2>
         <p> clean Animation</p>
@@ -294,6 +304,7 @@ document.querySelector('#clean').addEventListener('click', function () {
 // Stat Button
 document.querySelector('#stats').addEventListener('click', function () {
     clickSound.play();
+    
     let htmlTemplate = `<div class="container">
     <div class="row">
       <div class="col-md-10 nes-container is-dark with-title">
@@ -322,19 +333,13 @@ document.querySelector('#stats').addEventListener('click', function () {
       </div>
     </div>`;
     mainDisplay.innerHTML = htmlTemplate;
-    // mainDisplay.innerHTML = `
-    //     <p>Age: ${PET.stats.age}</p>
-    //     <p>Weight: ${PET.stats.weight}</p>
-    //     <p>Happy: ${PET.stats.happy}</p>
-    //     <p>Hungry: ${PET.stats.hungry}</p>
-    //     <p>Sickness: ${PET.stats.sickness}</p>
-    //     <p>Poop: ${PET.stats.poop}</p>
-    // `;
+    
 })
 
 // Discipline Button
 document.querySelector('#discipline').addEventListener('click', function () {
     clickSound.play();
+    
     fetch('https://api.kanye.rest').then((res) => res.json()).then((data) => {
         console.log(data)
         mainDisplay.innerHTML = `<h2>Kanye's inpiration</h2>
@@ -350,8 +355,40 @@ document.querySelector('#discipline').addEventListener('click', function () {
 
 // Play Button
 document.querySelector('#attention').addEventListener('click', function () {
+   
     clickSound.play();
-    mainDisplay.innerHTML = `<h2>Attention View</h2>
-        <p>Attention Animation</p>
+    mainDisplay.innerHTML = `
+    <div class="Character moving">
+        <img id='petAnimation' class="Character_spritesheet pixelart face-right" src="./sprite/img/cat.jpeg" alt="Character" />
+    </div>
     `;
+    petAnimation();
+    
 })
+
+function petAnimation(){
+    const walkContainer = document.querySelector('#petAnimation');
+    let petMoving = setInterval(() => {
+        
+        if(document.querySelector('.Character').classList.contains('moving')){
+            if(walkContainer.classList.contains('face-right')){
+                walkContainer.classList.toggle('face-right');
+                walkContainer.classList.toggle('face-down');
+            }else if (walkContainer.classList.contains('face-down')){
+                walkContainer.classList.toggle('face-down');
+                walkContainer.classList.toggle('face-left');
+            }else if (walkContainer.classList.contains('face-left')){
+                walkContainer.classList.toggle('face-left');
+                walkContainer.classList.toggle('face-up');
+            }else if (walkContainer.classList.contains('face-up')){
+                walkContainer.classList.toggle('face-up');
+                walkContainer.classList.toggle('face-right');
+            }else{
+                walkContainer.classList.toggle('face-right');
+            }
+        }
+        else{
+            clearInterval(petMoving)
+        }
+    }, 6000);
+}

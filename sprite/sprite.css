@@ -7,8 +7,8 @@
     width: calc(32px * var(--pixel-size));
     height: calc(32px * var(--pixel-size));
     overflow: hidden;
-    position: relative;
-    margin: 4em auto;
+    position: absolute;
+    /* margin: 4em auto; */
  }
  
  .Character_spritesheet {
