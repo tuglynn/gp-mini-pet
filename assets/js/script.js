@@ -1,17 +1,19 @@
 // hungry timer after eating
 const HUNGRY = 15;
 // poop timer after eating
-const POOP = 1 * 20;
+const POOP = 20;
 // happy timer after play
-const BORED = 1 * 30;
+const BORED = 30;
 // sick timer after eating too much
-const SICK = 1 * 40;
+const SICK = 40;
 // sick timer if cage is not clean
-const CLEANCHECK = 1 * 50;
-// second tracker -> use it for age calculation in the future
-let count = 0;
+const CLEANCHECK = 50;
 // Animal instinct timer - animal will go bored and hungry 
 const HANGRY = 50;
+
+// second tracker -> use it for age calculation in the future
+let count = 0;
+
 // main render div
 const mainDisplay = document.querySelector('.display');
 const gameMusic = new Audio('/assets/sound/game.mp3');
@@ -261,7 +263,7 @@ function gameStart(){
 }
 
 function init() {
-    gameMusic.volume = 0.2;
+    gameMusic.volume = 0.1;
     gameMusic.play();
     gameMusic.loop = true;
     // what is your pet name
@@ -474,10 +476,10 @@ document.querySelector('#discipline').addEventListener('click', function () {
             <h2 class='text-center mb-5'>Kanye's inpiration</h2>
         <section class='message-list'>
             <section class='message row'>
-                <div class='col-3 align-self-end nes-container is-rounded p-0'> 
-                    <img src='https://64.media.tumblr.com/070d70ca75a9f9b1a3dc9a33ee22056b/tumblr_p7s4gfz4rw1tssg0jo1_1280.gifv' alt='kanye' class='w-100'>
+                <div class='col-2 align-self-end nes-container is-rounded p-0 mt-5'> 
+                    <img src='https://64.media.tumblr.com/070d70ca75a9f9b1a3dc9a33ee22056b/tumblr_p7s4gfz4rw1tssg0jo1_1280.gifv' alt='kanye' class='w-100 h-100' style='image-rendering:pixelated;'>
                 </div>
-                <div class='nes-balloon from-left col-8 is-dark'>
+                <div class='nes-balloon from-left col-9 is-dark mb-5'>
                     <quoteblock>"${data.quote}"</quoteblock>
                 </div>
                 
