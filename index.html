@@ -63,14 +63,14 @@
   </div>
   <div class="display"></div>
   <div class="interaction">
-    <button class="nes-btn" id="feed">Feed</button>
+    <button class="nes-btn is-success" id="feed">Feed</button>
     <button class="nes-btn"id="light">Light</button>
-    <button class="nes-btn" id="play">Play</button>
-    <button class="nes-btn" id="medicine">Medicine</button>
-    <button class="nes-btn"id="clean">clean</button>
-    <button class="nes-btn"id="stats">Stats</button>
-    <button class="nes-btn" id="discipline">Kanspiration</button>
-    <button class="nes-btn" id="attention">Idle View</button>
+    <button class="nes-btn is-success" id="play">Play</button>
+    <button class="nes-btn is-primary" id="medicine">Medicine</button>
+    <button class="nes-btn is-primary"id="clean">Clean</button>
+    <button class="nes-btn is-warning"id="stats">Stats</button>
+    <button class="nes-btn is-error" id="discipline">Kanspiration</button>
+    <button class="nes-btn is-error" id="attention">Idle View</button>
 
   </div>
 </main>
@@ -80,28 +80,35 @@
     <div class="nes-container with-title stat-box">
       <h3 class="title">Akachan Status</h3>
       <div class="row">
-        <a class="nes-btn" href="#">Hunger</a>
+        <a>Health</a>
         <div class="col-sm-4 col-xs-12"></div>
         <div class="col-sm-8 col-xs-12">
-          <progress class="nes-progress is-success stat-bar" value="65" max="100"></progress>
+          <progress class="nes-progress stat-bar" value="65" max="100"></progress>
         </div>
       </div>
 
       <div class="row">
-        <a class="nes-btn" href="#">Sleep</a>
+        <a>Hunger</a>
         <div class="col-sm-4 col-xs-12"></div>
         <div class="col-sm-8 col-xs-12">
-          <progress class="nes-progress is-error stat-bar" value="25" max="100"></progress>
+          <progress class="nes-progress stat-bar" value="50" max="100"></progress>
         </div>
       </div>
 
       <div class="row"></div>
 
       <div class="row">
-        <a class="nes-btn" href="#">Poop</a>
+        <a>Poop</a>
         <div class="col-sm-4 col-xs-12"></div>
         <div class="col-sm-8 col-xs-12">
-          <progress class="nes-progress is-pattern stat-bar" value="50" max="100"></progress>
+          <progress class="nes-progress stat-bar" value="25" max="100"></progress>
+        </div>
+      </div>
+      <div class="row">
+        <a>Cleanliness</a>
+        <div class="col-sm-4 col-xs-12"></div>
+        <div class="col-sm-8 col-xs-12">
+          <progress class="nes-progress stat-bar" value="50" max="100"></progress>
         </div>
       </div>
     </div>
