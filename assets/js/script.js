@@ -16,7 +16,7 @@ let count = 0;
 
 // main render div
 const mainDisplay = document.querySelector('.display');
-const gameMusic = new Audio('./assets/sound/game.wav');
+const gameMusic = new Audio('./assets/sound/game.mp3');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
 const gameOver = new Audio('./assets/sound/gameOver.wav');
 const musicPlay = document.querySelector('.musicPlay');
@@ -231,9 +231,8 @@ function displayTracker(){
     }
 }
 function gameStart(){
-    
-    
-    loopMusic();
+    //loop music
+    // loopMusic();
     
     document.querySelector('.startGame').innerHTML = ''; 
     getLocalPet();
@@ -409,7 +408,7 @@ document.querySelector('#medicine').addEventListener('click', function () {
     PET.beVaccininated();
     mainDisplay.innerHTML = `
         <div class='text-center'>
-        <h2>Gave you pet some drugs</h2>
+        <h2>Give your pet some drugs</h2>
         <img src='./assets/imgs/medicine.gif' alt='pet takes medicine'/>
         </div>
     `;
@@ -476,7 +475,7 @@ document.querySelector('#discipline').addEventListener('click', function () {
         console.log(data)
         mainDisplay.innerHTML = `
         <div>
-            <h2 class='text-center mb-5'>Kanye's inpiration</h2>
+            <h2 class='text-center mb-5'>Kan-spiration</h2>
         <section class='message-list'>
             <section class='message row'>
                 <div class='col-2 align-self-end nes-container is-rounded p-0 mt-5'> 
