@@ -16,12 +16,13 @@ let count = 0;
 
 // main render div
 const mainDisplay = document.querySelector('.display');
-const gameMusic = new Audio('./assets/sound/game.wav');
+const gameMusic = new Audio('./assets/sound/gameMusic.mp3');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
 const gameOver = new Audio('./assets/sound/gameOver.wav');
 const musicPlay = document.querySelector('.musicPlay');
-musicPlay.addEventListener('click',loopMusic);
-function loopMusic(){
+musicPlay.addEventListener('click', loopMusic);
+
+function loopMusic() {
     gameMusic.volume = 0.1;
     gameMusic.play();
     gameMusic.loop = true;
@@ -30,27 +31,27 @@ function loopMusic(){
 const displayContainer = document.querySelector('#displayContainer');
 const defaultStats = {
     stats: {
-        name:'',
+        name: '',
         age: 0,
         weight: 2,
         happy: 2,
         hungry: 2,
         sickness: 0,
         poop: 0,
-        sleep:false
+        sleep: false
     },
     actionQueue: []
 }
 const PET = {
     stats: {
-        name:'',
+        name: '',
         age: 0,
         weight: 0,
         happy: 4,
         hungry: 4,
         sickness: 0,
         poop: 0,
-        sleep:false
+        sleep: false
     },
     // action tracker
     actionQueue: [],
@@ -149,7 +150,9 @@ const PET = {
 function getLocalPet() {
     console.log(count, PET.stats, PET.actionQueue)
     const PETstats = JSON.parse(localStorage.getItem('myPET')) || defaultStats;
-    PET.stats = {...PETstats.stats};
+    PET.stats = {
+        ...PETstats.stats
+    };
     PET.actionQueue = [...PETstats.actionQueue];
     // console.log(PET);
 }
@@ -199,9 +202,9 @@ function petDie() {
     const allInputs = document.querySelectorAll('.uiBtn');
     // console.log(allInputs);
     allInputs.forEach((input, i) => {
-        input.setAttribute('disabled',true);
+        input.setAttribute('disabled', true);
     });
-    document.querySelector('.poop').innerHTML ='';
+    document.querySelector('.poop').innerHTML = '';
     mainDisplay.innerHTML = `
             <h2>R.I.P.</h2>
             <img class='w-80' src='./assets/imgs/Death.gif' alt='RIP'/>
@@ -211,31 +214,33 @@ function petDie() {
     document.querySelector('#resetBtn').addEventListener('click', function () {
         localStorage.clear();
         init();
-        
+
         allInputs.forEach((input, i) => {
             input.removeAttribute('disabled');
         });
-        mainDisplay.innerHTML ='';
+        mainDisplay.innerHTML = '';
     });
 
 }
-function displayTracker(){
-    if(PET.stats.poop>0){
-        let htmlTemplate=''
-        for(let i =0; i< PET.stats.poop;i++){
+
+function displayTracker() {
+    if (PET.stats.poop > 0) {
+        let htmlTemplate = ''
+        for (let i = 0; i < PET.stats.poop; i++) {
             htmlTemplate += '<i class="fa-3x fa-solid fa-poo brown m-2"></i>'
         }
         document.querySelector('.poop').innerHTML = htmlTemplate;
-    }else{
+    } else {
         document.querySelector('.poop').innerHTML = '';
     }
 }
-function gameStart(){
-    
-    
+
+function gameStart() {
+
+
     loopMusic();
-    
-    document.querySelector('.startGame').innerHTML = ''; 
+
+    document.querySelector('.startGame').innerHTML = '';
     getLocalPet();
     document.querySelector('#petName').innerHTML = `<h2>${PET.stats.name} akachan</h2>`;
     idleDisplay();
@@ -247,7 +252,7 @@ function gameStart(){
         } else {
             PET.instinct();
         }
-    }, HANGRY*1000);
+    }, HANGRY * 1000);
     // get and set localstorage every 5s
     let everySecond = setInterval(() => {
         count++;
@@ -264,24 +269,25 @@ function gameStart(){
     }, 1000);
 
     setLocalPet();
-   
+
 }
 
 function init() {
-    
+
     // what is your pet name
-    if(!!!localStorage.getItem('myPET')){
+    if (!!!localStorage.getItem('myPET')) {
         askPetName();
-    }else
-    {gameStart()};
-    if(!!PET.stats.sleep){
+    } else {
+        gameStart()
+    };
+    if (!!PET.stats.sleep) {
         displayContainer.classList.toggle('is-dark');
     }
 }
 init();
 
-function askPetName(){
-    let htmlTemplate =`
+function askPetName() {
+    let htmlTemplate = `
     <div class=''>
     <section class='message-list'>
         <section class='message row askName'>
@@ -307,11 +313,11 @@ function askPetName(){
 
     document.querySelector('.startGame').innerHTML = htmlTemplate;
 
-    document.querySelector('#getName').addEventListener('submit',function(e){
+    document.querySelector('#getName').addEventListener('submit', function (e) {
         e.preventDefault();
         const petName = document.querySelector('#myPetName');
-        
-        PET.stats.name=petName.value;
+
+        PET.stats.name = petName.value;
         htmlTemplate = `
         <section class='message-list'>
             <section class='message row askName'>
@@ -333,10 +339,10 @@ function askPetName(){
         document.querySelector('.startGame').innerHTML = htmlTemplate;
         PET.stats.hungry = 4;
         PET.stats.happy = 4;
-        PET.stats.sickness=0;
-        PET.stats.sleep=false;
-        PET.stats.poop = 0;   
-        setLocalPet();    
+        PET.stats.sickness = 0;
+        PET.stats.sleep = false;
+        PET.stats.poop = 0;
+        setLocalPet();
     })
 }
 
@@ -344,7 +350,7 @@ function askPetName(){
 /* INTERACTION */
 // FEED button
 document.querySelector('#feed').addEventListener('click', function () {
-   
+
     clickSound.play();
     PET.mealFed();
 
@@ -363,8 +369,8 @@ document.querySelector('#feed').addEventListener('click', function () {
 
 // Light Button
 document.querySelector('#light').addEventListener('click', function () {
-    
-    clickSound.play();  
+
+    clickSound.play();
     mainDisplay.innerHTML = `
         <div class=''>
             <h2>Light View</h2>
@@ -373,7 +379,8 @@ document.querySelector('#light').addEventListener('click', function () {
         </div>
     `;
 })
-function lightToggle(){
+
+function lightToggle() {
     PET.stats.sleep = !PET.stats.sleep;
     displayContainer.classList.toggle('is-dark');
     mainDisplay.innerHTML = `
@@ -383,11 +390,11 @@ function lightToggle(){
             <button onClick='lightToggle()' class='nes-btn'>${PET.stats.sleep?'On':'Off'}</button>    
         </div>
     `;
-    
+
 }
 // Play Button
 document.querySelector('#play').addEventListener('click', function () {
-    
+
     clickSound.play();
     PET.playGame();
     setLocalPet();
@@ -405,7 +412,7 @@ document.querySelector('#play').addEventListener('click', function () {
 // Medicine Button
 document.querySelector('#medicine').addEventListener('click', function () {
     clickSound.play();
-   
+
     PET.beVaccininated();
     mainDisplay.innerHTML = `
         <div class='text-center'>
@@ -432,32 +439,32 @@ document.querySelector('#clean').addEventListener('click', function () {
 // Stat Button
 document.querySelector('#stats').addEventListener('click', function () {
     clickSound.play();
-    
+
     let htmlTemplate = `<div class="container">
     <div class="row">
       <div class="col-md-10 nes-container with-title is-rounded">
         <p class="title">STATS</p>
         <section class="icon-list">`
-    htmlTemplate +=`<p>Hungry</p>`;
-    for(let i=1; i<5;i++){
-        if(i<=PET.stats.hungry){
-            htmlTemplate+= `<i class="nes-icon is-medium star"></i>`
-        }else{
+    htmlTemplate += `<p>Hungry</p>`;
+    for (let i = 1; i < 5; i++) {
+        if (i <= PET.stats.hungry) {
+            htmlTemplate += `<i class="nes-icon is-medium star"></i>`
+        } else {
             htmlTemplate += `<i class="nes-icon is-medium star is-empty"></i>`
         }
     }
     htmlTemplate += `<p>Happy</p>`;
-    for(let i=1;i<5;i++){
-        if(i<=PET.stats.happy){
-            htmlTemplate+= `<i class="nes-icon is-medium like"></i>`
-        }else{
-            htmlTemplate+=`<i class="nes-icon is-medium like is-empty"></i>`
+    for (let i = 1; i < 5; i++) {
+        if (i <= PET.stats.happy) {
+            htmlTemplate += `<i class="nes-icon is-medium like"></i>`
+        } else {
+            htmlTemplate += `<i class="nes-icon is-medium like is-empty"></i>`
         }
 
     }
     htmlTemplate += `<p>Health</p>`;
-    for(let i=4;i>0;i--){
-        htmlTemplate +=`<i class='nes-icon is-medium ${i>PET.stats.sickness?'heart':'heart is-empty'}'></i>`
+    for (let i = 4; i > 0; i--) {
+        htmlTemplate += `<i class='nes-icon is-medium ${i>PET.stats.sickness?'heart':'heart is-empty'}'></i>`
     }
 
     htmlTemplate += `      
@@ -465,13 +472,13 @@ document.querySelector('#stats').addEventListener('click', function () {
       </div>
     </div>`;
     mainDisplay.innerHTML = htmlTemplate;
-    
+
 })
 
 // Discipline Button
 document.querySelector('#discipline').addEventListener('click', function () {
     clickSound.play();
-    
+
     fetch('https://api.kanye.rest').then((res) => res.json()).then((data) => {
         console.log(data)
         mainDisplay.innerHTML = `
@@ -500,15 +507,15 @@ document.querySelector('#discipline').addEventListener('click', function () {
 
 // Play Button
 document.querySelector('#attention').addEventListener('click', function () {
-   
+
     clickSound.play();
     idleDisplay();
     loopMusic();
-    
-    
+
+
 })
 
-function idleDisplay(){
+function idleDisplay() {
     mainDisplay.innerHTML = `
     <div class="Character moving">
         <img id='petAnimation' class="Character_spritesheet pixelart face-right" src="./sprite/img/cat.jpeg" alt="Character" />
@@ -517,28 +524,27 @@ function idleDisplay(){
     petAnimation();
 }
 
-function petAnimation(){
+function petAnimation() {
     const walkContainer = document.querySelector('#petAnimation');
     let petMoving = setInterval(() => {
-        
-        if(!!document.querySelector('.Character') && document.querySelector('.Character').classList.contains('moving')){
-            if(walkContainer.classList.contains('face-right')){
+
+        if (!!document.querySelector('.Character') && document.querySelector('.Character').classList.contains('moving')) {
+            if (walkContainer.classList.contains('face-right')) {
                 walkContainer.classList.toggle('face-right');
                 walkContainer.classList.toggle('face-down');
-            }else if (walkContainer.classList.contains('face-down')){
+            } else if (walkContainer.classList.contains('face-down')) {
                 walkContainer.classList.toggle('face-down');
                 walkContainer.classList.toggle('face-left');
-            }else if (walkContainer.classList.contains('face-left')){
+            } else if (walkContainer.classList.contains('face-left')) {
                 walkContainer.classList.toggle('face-left');
                 walkContainer.classList.toggle('face-up');
-            }else if (walkContainer.classList.contains('face-up')){
+            } else if (walkContainer.classList.contains('face-up')) {
                 walkContainer.classList.toggle('face-up');
                 walkContainer.classList.toggle('face-right');
-            }else{
+            } else {
                 walkContainer.classList.toggle('face-right');
             }
-        }
-        else{
+        } else {
             clearInterval(petMoving)
         }
     }, 6000);
