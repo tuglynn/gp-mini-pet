@@ -2,11 +2,6 @@
 A virtual mini pet game
 
 
-<<<<<<< HEAD
-Hai is here!
-
-https://github.com/monacoglynn/gp-mini-pet
-=======
 ### project title Burauza no Akachan (Browser Babies)
 
 
@@ -21,4 +16,3 @@ Rough Breakdown
     Richmond: html/nes.css
     Patrick: admin and helping with anything else.
 
->>>>>>> e8c4f524b1e56232e336378e4819984a0474a7c3
