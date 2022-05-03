@@ -32,9 +32,11 @@ body {
   }
   .sprite-box {
     width: 500px;
-    height: 500px;
+    /* min-width: 500px; */
+    min-height: 500px;
+    height: fit-content;
     margin:5px auto;
-   
+    
   }
   
 .moving {
@@ -72,4 +74,10 @@ body {
 
 .brown{
   color:#8c5e3c
+}
+
+@media only screen and (max-width:499px) {
+  :root{
+    --pixel-size: 4;
+  }
 }

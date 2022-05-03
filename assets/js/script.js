@@ -19,6 +19,13 @@ const mainDisplay = document.querySelector('.display');
 const gameMusic = new Audio('/assets/sound/game.mp3');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
 const gameOver = new Audio('./assets/sound/gameOver.wav');
+const musicPlay = document.querySelector('.musicPlay');
+musicPlay.addEventListener('click',loopMusic);
+function loopMusic (){
+    gameMusic.volume = 0.1;
+    gameMusic.play();
+    gameMusic.loop = true;
+}
 // main view of all the stats and animation
 const displayContainer = document.querySelector('#displayContainer');
 const defaultStats = {
@@ -226,9 +233,7 @@ function displayTracker(){
 function gameStart(){
     
     
-    // let playGameMusic = setInterval(() => {
-    //     gameMusic.play();
-    // }, 62000);
+    loopMusic();
     
     document.querySelector('.startGame').innerHTML = ''; 
     getLocalPet();
@@ -263,9 +268,7 @@ function gameStart(){
 }
 
 function init() {
-    gameMusic.volume = 0.1;
-    gameMusic.play();
-    gameMusic.loop = true;
+    
     // what is your pet name
     if(!!!localStorage.getItem('myPET')){
         askPetName();
