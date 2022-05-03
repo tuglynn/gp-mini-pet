@@ -27,9 +27,9 @@ body {
   margin-right: 30px;
 }
 .stat-box {
-  display: wrap;
+  display: flex;
   justify-content: center;
-  width: 60%;
+  width: 100%;
 }
 .speech-bubble {
   width: 400px;
