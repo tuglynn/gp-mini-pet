@@ -16,11 +16,7 @@ let count = 0;
 
 // main render div
 const mainDisplay = document.querySelector('.display');
-<<<<<<< HEAD
-const gameMusic = new Audio('./assets/sound/game.mp3');
-=======
 const gameMusic = new Audio('./assets/sound/gameMusic.mp3');
->>>>>>> b8f0b833f4b734449df0348903ecf3940fb54e12
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
 const gameOver = new Audio('./assets/sound/gameOver.wav');
 const musicPlay = document.querySelector('.musicPlay');
@@ -238,13 +234,6 @@ function displayTracker() {
         document.querySelector('.poop').innerHTML = '';
     }
 }
-<<<<<<< HEAD
-function gameStart(){
-    //loop music
-    // loopMusic();
-    
-    document.querySelector('.startGame').innerHTML = ''; 
-=======
 
 function gameStart() {
 
@@ -252,7 +241,6 @@ function gameStart() {
     loopMusic();
 
     document.querySelector('.startGame').innerHTML = '';
->>>>>>> b8f0b833f4b734449df0348903ecf3940fb54e12
     getLocalPet();
     document.querySelector('#petName').innerHTML = `<h2>${PET.stats.name} akachan</h2>`;
     idleDisplay();
@@ -261,6 +249,7 @@ function gameStart() {
         if (PET.isDeath()) {
             clearInterval(animalInstinct);
             petDie();
+            PET.stats.sleep = false;
         } else {
             PET.instinct();
         }
