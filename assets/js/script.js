@@ -18,6 +18,7 @@ let count = 0;
 const mainDisplay = document.querySelector('.display');
 const gameMusic = new Audio('./assets/sound/sunnyDay.mp3');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
+clickSound.volume = 0.1;
 const gameOver = new Audio('./assets/sound/gameOver.wav');
 const musicPlay = document.querySelector('.musicPlay');
 const kanyeSound = new Audio('./assets/sound/Kanye.mp3');
