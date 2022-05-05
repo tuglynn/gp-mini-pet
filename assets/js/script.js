@@ -16,10 +16,12 @@ let count = 0;
 
 // main render div
 const mainDisplay = document.querySelector('.display');
-const gameMusic = new Audio('./assets/sound/gameMusic.mp3');
+const gameMusic = new Audio('./assets/sound/sunnyDay.mp3');
 const clickSound = new Audio('./assets/sound/pickupCoin.wav');
+clickSound.volume = 0.1;
 const gameOver = new Audio('./assets/sound/gameOver.wav');
 const musicPlay = document.querySelector('.musicPlay');
+const kanyeSound = new Audio('./assets/sound/Kanye.mp3');
 musicPlay.addEventListener('click', loopMusic);
 
 function loopMusic() {
@@ -214,10 +216,6 @@ function petDie() {
     document.querySelector('#resetBtn').addEventListener('click', function () {
         localStorage.clear();
         init();
-
-        allInputs.forEach((input, i) => {
-            input.removeAttribute('disabled');
-        });
         mainDisplay.innerHTML = '';
     });
 
@@ -236,7 +234,10 @@ function displayTracker() {
 }
 
 function gameStart() {
-
+    // enable the uiButton
+    document.querySelectorAll('.uiBtn').forEach((input, i) => {
+        input.removeAttribute('disabled');
+    });
 
     loopMusic();
 
@@ -249,6 +250,7 @@ function gameStart() {
         if (PET.isDeath()) {
             clearInterval(animalInstinct);
             petDie();
+            PET.stats.sleep = false;
         } else {
             PET.instinct();
         }
@@ -273,7 +275,12 @@ function gameStart() {
 }
 
 function init() {
-
+    
+    // console.log(allInputs);
+    // disable uiButton
+    document.querySelectorAll('.uiBtn').forEach((input, i) => {
+        input.setAttribute('disabled', true);
+    });
     // what is your pet name
     if (!!!localStorage.getItem('myPET')) {
         askPetName();
@@ -287,6 +294,10 @@ function init() {
 init();
 
 function askPetName() {
+    // disable uiButton
+    document.querySelectorAll('.uiBtn').forEach((input, i) => {
+        input.setAttribute('disabled', true);
+    });
     let htmlTemplate = `
     <div class=''>
     <section class='message-list'>
@@ -342,6 +353,7 @@ function askPetName() {
         PET.stats.sickness = 0;
         PET.stats.sleep = false;
         PET.stats.poop = 0;
+        PET.actionQueue = [];
         setLocalPet();
     })
 }
@@ -396,18 +408,65 @@ function lightToggle() {
 document.querySelector('#play').addEventListener('click', function () {
 
     clickSound.play();
-    PET.playGame();
-    setLocalPet();
-    mainDisplay.innerHTML = `<h2>Play View</h2>
-        <p> Play Animation</p>
-        <p> Random number [0-9] and display: RnNum1</p>
-        <p> prompt user to press lesser or greater button</>
-        <button><</button> <button>></button>
-        <p> then generate another random number from [0-9] and doesnt containt the prev random number: RnNum2</p>        
-        <p> user (RnNum1 - RnNum2) to compare with userInput</p>
-        <p> if user win 3 out of 5 times, +1 to happiness stat</p>
-    `;
+    guessGame();
+    // mainDisplay.innerHTML = `<h2>Play View</h2>
+    //     <p> Play Animation</p>
+    //     <p> Random number [0-9] and display: RnNum1</p>
+    //     <p> prompt user to press lesser or greater button</>
+    //     <button><</button> <button>></button>
+    //     <p> then generate another random number from [0-9] and doesnt containt the prev random number: RnNum2</p>        
+    //     <p> user (RnNum1 - RnNum2) to compare with userInput</p>
+    //     <p> if user win 3 out of 5 times, +1 to happiness stat</p>
+    // `;
 })
+
+
+function guessGame(){
+    let randomSource = [1,2,3,4,5,6,7,8,9];
+    const firstNumber = randomSource.splice(Math.floor(Math.random()*randomSource.length),1);
+    const secondNumber = randomSource.splice(Math.floor(Math.random()*randomSource.length),1);
+    mainDisplay.innerHTML =`  
+        <form id='userGuess' class='text-center container'>
+            <h5>Play<br/>'Greater-or-Lesser'<br/>with your pet</h5>
+            <br/>
+            <div class='row text-center'>
+            <button class='nes-btn col-3 is-warning'  data-pick='lt'><<<</button>
+            <p class='h2 col-4 text-center'>${firstNumber}</p>
+            <button class='nes-btn col-3 is-success' data-pick='gt'>>>></button> 
+            </div>
+        </form>
+    `;
+    const userGuess = document.querySelector('#userGuess');
+    userGuess.addEventListener('click', function(e){
+        e.preventDefault();
+        const target = e.target;
+        if(target.matches('.nes-btn')){
+            if((secondNumber-firstNumber>0 && target.dataset.pick =='gt')||
+                (secondNumber-firstNumber<0 && target.dataset.pick=='lt')
+            ){
+                mainDisplay.innerHTML = `
+                    <div class='text-center'>
+                    <h2>${secondNumber}!</h2>
+                    <p>You got it right!</p>
+                    <p class='text-primary h2'> +<i class='nes-icon like is-large'> </i> </p>
+                    </div>
+                `;
+                PET.playGame();
+                setLocalPet();
+            }else {
+                mainDisplay.innerHTML = `
+                <div class='text-center'>
+                    <h2>${secondNumber}!</h2>
+                    <p>You got it wrong!</p>
+                    <p>Try again!</p>
+                </div>
+                `;
+            }
+        }
+    });
+}
+
+
 
 // Medicine Button
 document.querySelector('#medicine').addEventListener('click', function () {
@@ -416,7 +475,7 @@ document.querySelector('#medicine').addEventListener('click', function () {
     PET.beVaccininated();
     mainDisplay.innerHTML = `
         <div class='text-center'>
-        <h2>Gave you pet some drugs</h2>
+        <h2>Give your pet some drugs</h2>
         <img src='./assets/imgs/medicine.gif' alt='pet takes medicine'/>
         </div>
     `;
@@ -477,24 +536,24 @@ document.querySelector('#stats').addEventListener('click', function () {
 
 // Discipline Button
 document.querySelector('#discipline').addEventListener('click', function () {
-    clickSound.play();
+    kanyeSound.play();
 
     fetch('https://api.kanye.rest').then((res) => res.json()).then((data) => {
         console.log(data)
         mainDisplay.innerHTML = `
         <div>
-            <h2 class='text-center mb-5'>Kanye's inpiration</h2>
-        <section class='message-list'>
-            <section class='message row'>
-                <div class='col-2 align-self-end nes-container is-rounded p-0 mt-5'> 
-                    <img src='https://64.media.tumblr.com/070d70ca75a9f9b1a3dc9a33ee22056b/tumblr_p7s4gfz4rw1tssg0jo1_1280.gifv' alt='kanye' class='w-100 h-100' style='image-rendering:pixelated;'>
-                </div>
-                <div class='nes-balloon from-left col-9 is-dark mb-5'>
-                    <quoteblock>"${data.quote}"</quoteblock>
-                </div>
-                
+            <h2 class='text-center mb-5'>Kan-spiration</h2>
+            <section class='message-list'>
+                <section class='message row'>
+                    <div class='col-2 align-self-end nes-container is-rounded p-0 mt-5'> 
+                        <img src='https://64.media.tumblr.com/070d70ca75a9f9b1a3dc9a33ee22056b/tumblr_p7s4gfz4rw1tssg0jo1_1280.gifv' alt='kanye' class='w-100 h-100' style='image-rendering:pixelated;'>
+                    </div>
+                    <div class='nes-balloon from-left col-9 is-dark mb-5'>
+                        <quoteblock>"${data.quote}"</quoteblock>
+                    </div>
+                    
+                </section>
             </section>
-        </section>
         
         </div>
         
