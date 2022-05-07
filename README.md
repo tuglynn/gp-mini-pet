@@ -20,8 +20,10 @@ Rough Breakdown
 
 
 # description
-
 Burauza no Akachan is a virtual pet you take care of directly in your browser. Name your pet, feed them and clean up after them, your akachan is just like owning a real pet.
+
+We used two different APIs Kayne.rest & Moment.JS. Our CSS Framework is called NES.CSS to give an 8-bit feel. We also utilized Bootstrap. Used CSS to write a sprite animation. 
+
 
 
 # user story
