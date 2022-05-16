@@ -275,7 +275,7 @@ function gameStart() {
 }
 
 function init() {
-    
+
     // console.log(allInputs);
     // disable uiButton
     document.querySelectorAll('.uiBtn').forEach((input, i) => {
@@ -421,11 +421,11 @@ document.querySelector('#play').addEventListener('click', function () {
 })
 
 
-function guessGame(){
-    let randomSource = [1,2,3,4,5,6,7,8,9];
-    const firstNumber = randomSource.splice(Math.floor(Math.random()*randomSource.length),1);
-    const secondNumber = randomSource.splice(Math.floor(Math.random()*randomSource.length),1);
-    mainDisplay.innerHTML =`  
+function guessGame() {
+    let randomSource = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const firstNumber = randomSource.splice(Math.floor(Math.random() * randomSource.length), 1);
+    const secondNumber = randomSource.splice(Math.floor(Math.random() * randomSource.length), 1);
+    mainDisplay.innerHTML = `  
         <form id='userGuess' class='text-center container'>
             <h5>Play<br/>'Greater-or-Lesser'<br/>with your pet</h5>
             <br/>
@@ -437,13 +437,13 @@ function guessGame(){
         </form>
     `;
     const userGuess = document.querySelector('#userGuess');
-    userGuess.addEventListener('click', function(e){
+    userGuess.addEventListener('click', function (e) {
         e.preventDefault();
         const target = e.target;
-        if(target.matches('.nes-btn')){
-            if((secondNumber-firstNumber>0 && target.dataset.pick =='gt')||
-                (secondNumber-firstNumber<0 && target.dataset.pick=='lt')
-            ){
+        if (target.matches('.nes-btn')) {
+            if ((secondNumber - firstNumber > 0 && target.dataset.pick == 'gt') ||
+                (secondNumber - firstNumber < 0 && target.dataset.pick == 'lt')
+            ) {
                 mainDisplay.innerHTML = `
                     <div class='text-center'>
                     <h2>${secondNumber}!</h2>
@@ -453,7 +453,7 @@ function guessGame(){
                 `;
                 PET.playGame();
                 setLocalPet();
-            }else {
+            } else {
                 mainDisplay.innerHTML = `
                 <div class='text-center'>
                     <h2>${secondNumber}!</h2>
