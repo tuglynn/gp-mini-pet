@@ -1,7 +1,7 @@
 # Burauza No Akachan (Browser Babies)
 A virtual mini pet game
 
-https://monacoglynn.github.io/gp-mini-pet/
+https://tuglynn.github.io/gp-mini-pet/
 
 ## Project info
 ### Authors: [Hai Duong](https://github.com/caubenondo), [Marshal Rust](https://github.com/Marshall-Rust), [Patrick Glynn](https://github.com/monacoglynn), & [Richmond Dominguez](https://github.com/richmonddz)
